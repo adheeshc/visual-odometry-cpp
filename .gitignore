@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+#vscode
+.vscode/*
+
+#build
+build/*
+!build/build.xml
+**/.build
+**/build
