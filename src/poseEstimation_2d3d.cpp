@@ -165,19 +165,19 @@ public:
         double Z2 = Z * Z;
         // _jacobianOplusXi << -fx / Z, 0, fx* X / Z2, fx* X* Y / Z2, -fx - fx * X * X / Z2, fx* Y / Z,
             // 0, -fy / Z, fy* Y / Z2, fy + fy * Y * Y / Z2, -fy * X * Y / Z2, -fy * X / Z;
-            _jacobianOplusXi(0, 0) = -fx / Z;
-            _jacobianOplusXi(0, 1) = 0;
-            _jacobianOplusXi(0, 2) = fx * X / Z2;
-            _jacobianOplusXi(0, 3) = fx * X * Y / Z2;
-            _jacobianOplusXi(0, 4) = -fx - fx * X * X / Z2;
-            _jacobianOplusXi(0, 5) = fx * Y / Z;
+        _jacobianOplusXi(0, 0) = -fx / Z;
+        _jacobianOplusXi(0, 1) = 0;
+        _jacobianOplusXi(0, 2) = fx * X / Z2;
+        _jacobianOplusXi(0, 3) = fx * X * Y / Z2;
+        _jacobianOplusXi(0, 4) = -fx - fx * X * X / Z2;
+        _jacobianOplusXi(0, 5) = fx * Y / Z;
 
-            _jacobianOplusXi(1, 0) = 0;
-            _jacobianOplusXi(1, 1) = -fy / Z;
-            _jacobianOplusXi(1, 2) = fy * Y / Z2;
-            _jacobianOplusXi(1, 3) = fy + fy * Y * Y / Z2;
-            _jacobianOplusXi(1, 4) = -fy * X * Y / Z2;
-            _jacobianOplusXi(1, 5) = -fy * X / Z;
+        _jacobianOplusXi(1, 0) = 0;
+        _jacobianOplusXi(1, 1) = -fy / Z;
+        _jacobianOplusXi(1, 2) = fy * Y / Z2;
+        _jacobianOplusXi(1, 3) = fy + fy * Y * Y / Z2;
+        _jacobianOplusXi(1, 4) = -fy * X * Y / Z2;
+        _jacobianOplusXi(1, 5) = -fy * X / Z;
     }
 
     //dummy read/write function
@@ -270,6 +270,30 @@ void findFeatureMatches(const cv::Mat& img1, const cv::Mat& img2, std::vector<cv
     }
 }
 
+void poseEstimation_2d3d(std::vector<cv::Point3f>& points_3d, std::vector<cv::Point2f>& points_2d, std::vector<cv::KeyPoint>& kp1, std::vector<cv::KeyPoint>& kp2, std::vector<cv::DMatch>& matches, const cv::Mat& K, cv::Mat& R, cv::Mat& t) {
+
+    cv::Mat r;
+    cv::solvePnP(points_3d, points_2d, K, cv::Mat(), r, t, false);
+    cv::Rodrigues(r, R); //r is rotation vector, R is rotation matrix
+
+    cv::Mat T = cv::Mat::eye(3, 4, CV_64F);
+    T.at<double>(0, 0) = R.at<double>(0, 0);
+    T.at<double>(0, 1) = R.at<double>(0, 1);
+    T.at<double>(0, 2) = R.at<double>(0, 2);
+    T.at<double>(1, 0) = R.at<double>(1, 0);
+    T.at<double>(1, 1) = R.at<double>(1, 1);
+    T.at<double>(1, 2) = R.at<double>(1, 2);
+    T.at<double>(2, 0) = R.at<double>(2, 0);
+    T.at<double>(2, 1) = R.at<double>(2, 1);
+    T.at<double>(2, 2) = R.at<double>(2, 2);
+
+    T.at<double>(0, 3) = t.at<double>(0, 0);
+    T.at<double>(1, 3) = t.at<double>(1, 0);
+    T.at<double>(2, 3) = t.at<double>(2, 0);
+
+    std::cout << "Original Estimated Pose: \n" << T << std::endl;
+}
+
 int main() {
 
     // Load Data
@@ -278,8 +302,9 @@ int main() {
     std::string fileName3 = "../data/1_depth.png";
     cv::Mat img1 = cv::imread(fileName1);
     cv::Mat img2 = cv::imread(fileName2);
-    cv::Mat d1 = cv::imread(fileName3);
+    cv::Mat depth1 = cv::imread(fileName3);
     assert(img1.data != nullptr && img2.data != nullptr);
+    assert(depth1.data != nullptr);
 
     std::vector<cv::KeyPoint> kp1, kp2;
     std::vector<cv::DMatch> matches;
@@ -301,40 +326,20 @@ int main() {
     std::vector<cv::Point2f> points_2d;
 
     for (int i = 0; i < matches.size(); i++) {
-        ushort d = d1.ptr<unsigned short>(int(kp1[matches[i].queryIdx].pt.y))[int(kp1[matches[i].queryIdx].pt.x)];
-        if (d == 0)
+        ushort d1 = depth1.ptr<unsigned short>(int(kp1[matches[i].queryIdx].pt.y))[int(kp1[matches[i].queryIdx].pt.x)];
+        if (d1 == 0)
             continue;
-        float dd = d / 5000.0;
+        float dd = d1 / 5000.0;
         cv::Point2d p1 = pixel2cam(kp1[matches[i].queryIdx].pt, K);
         points_2d.emplace_back(kp2[matches[i].trainIdx].pt);
         points_3d.emplace_back(cv::Point3f(p1.x * dd, p1.y * dd, dd));
     }
-
     std::cout << "3d-2d pairs: " << points_3d.size() << std::endl;
 
-    cv::Mat r, t;
-    cv::solvePnP(points_3d, points_2d, K, cv::Mat(), r, t, false);
-    cv::Mat R;
-    cv::Rodrigues(r, R); //r is rotation vector, R is rotation matrix
+    cv::Mat R, t;
+    poseEstimation_2d3d(points_3d, points_2d, kp1, kp2, matches, K, R, t);
+    
 
-    // std::cout << "R: " << R << std::endl;
-    // std::cout << "t: " << t << std::endl;
-    cv::Mat T = cv::Mat::eye(3, 4, CV_64F);
-    T.at<double>(0, 0) = R.at<double>(0, 0);
-    T.at<double>(0, 1) = R.at<double>(0, 1);
-    T.at<double>(0, 2) = R.at<double>(0, 2);
-    T.at<double>(1, 0) = R.at<double>(1, 0);
-    T.at<double>(1, 1) = R.at<double>(1, 1);
-    T.at<double>(1, 2) = R.at<double>(1, 2);
-    T.at<double>(2, 0) = R.at<double>(2, 0);
-    T.at<double>(2, 1) = R.at<double>(2, 1);
-    T.at<double>(2, 2) = R.at<double>(2, 2);
-
-    T.at<double>(0, 3) = t.at<double>(0, 0);
-    T.at<double>(1, 3) = t.at<double>(1, 0);
-    T.at<double>(2, 3) = t.at<double>(2, 0);
-
-    std::cout << "Original Estimated Pose: " << T << std::endl;
 
     Sophus::SE3d pose;
     std::chrono::steady_clock::time_point t1 = std::chrono::steady_clock::now();
