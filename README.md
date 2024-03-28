@@ -1,7 +1,12 @@
 # Visual Odometry 
 
 ![License](https://img.shields.io/github/license/adheeshc/visual-odometry-cpp)
+![Forks](https://img.shields.io/github/forks/adheeshc/visual-odometry-cpp)
+![Stars](https://img.shields.io/github/stars/adheeshc/visual-odometry-cpp)
+![Issues](https://img.shields.io/github/issues/adheeshc/visual-odometry-cpp)
 ![Build](https://img.shields.io/badge/build-passing-brightgreen)
+
+The demo is tested on an Ubuntu 20.04 Platform.
 
 # Description
 
@@ -19,28 +24,21 @@ The 2D-2D camera pose estimation problem is solved using Epipolar Geometry. It c
 2. Find R, t based on E or F.
 3. Triangulate to find best R & t.
 
-    ### Some Issues with 2D-2D Pose Estimation
-    1. Scale Ambiguity - The normalization of t directly leads to scale ambiguity in monocular vision.
-    2. The Problem of Pure Rotation - In the decomposition of E to get R, t, if the camera is purely rotated, causing t to be zero, then E will also be zero, which will make it impossible for us to solve R.
-    3. More Than Eight Pairs of Features - use RANSAC instead of least-squares to find the best E based on 8 random pairs.
-
 ## 2D-3D Pose Estimation
 The 2D-2D camera pose estimation problem is solved using PnP (Perspective n-Points). It can be summarized as the following steps: 
-1. Estimate PnP** using either of DLT, P3P, EPnP, UPnP etc.
-2. Perform Bundle Adjustment/Non Linear Optimization to estimate the camera pose by finding minimizing the reprojection error.
+1. Estimate PnP 
+2. Perform Bundle Adjustment/Non Linear Optimization to estimate the camera pose by minimizing the reprojection error.
 
 Here, EPnP is used to solve the PnP problem.
-In this repository, two methods for Bundle Adjustment are explored - 
+In this repository, two methods for Bundle Adjustment are explored and compared on accuracy and speed - 
 1. A simple Gauss Newton Optimization written from scratch
 2. g2o Gauss-Newton Optimization
 
 ## 3D-3D Pose Estimation
 The 3D-3D camera pose estimation problem is solved using ICP (Iterative Closest Point). It can be summarized as the following steps: 
 
-
-
-
-The demo is tested on Ubuntu 20.04 Platform.
+1. using linear algebra (mainly SVD) to estimate pose
+2. using nonlinear optimization (similar to Bundle Adjustment) to improve pose.
 
 # Data description
 **1.png**: Image 1 
@@ -53,24 +51,27 @@ The demo is tested on Ubuntu 20.04 Platform.
 fx = 520.9 fy = 521.0 cx = 325.1 cy = 249.7
 
 # Prerequisites for this demo
-**OpenCV** : [OpenCV](https://github.com/opencv/opencv) OpenCV is an C++ library for Image Manipulation.
+[OpenCV](https://github.com/opencv/opencv) : OpenCV is an C++ library for Image Manipulation.
 Dowload and install instructions can be found at: https://github.com/opencv/opencv.
 
-**Eigen** : [Eigen](https://github.com/libigl/eigen) Eigen is a C++ template library for linear algebra.
+[Eigen](https://github.com/libigl/eigen) : Eigen is a C++ template library for linear algebra.
 Dowload and install instructions can be found at: https://github.com/libigl/eigen
 
-**Sophus** : [Sophus](https://github.com/strasdat/Sophus) Sophus is an open-source C++ framework for Lie groups commonly used for 2D and 3D geometric problems. 
+[Sophus](https://github.com/strasdat/Sophus) : Sophus is an open-source C++ framework for Lie groups commonly used for 2D and 3D geometric problems. 
 Dowload and install instructions can be found at: https://github.com/strasdat/Sophus.
 
-**g2o** : We use [g2o](https://github.com/RainerKuemmerle/g2o) g2o is an open-source C++ library for optimizing graph-based nonlinear error functions.
+[g2o](https://github.com/RainerKuemmerle/g2o) : g2o is an open-source C++ library for optimizing graph-based nonlinear error functions.
 Dowload and install instructions can be found at: https://github.com/RainerKuemmerle/g2o
-
 
 # Build and Run
 
+In parent directory 
 ```
-mkdir build  
+mkdir build 
 cd build  
 cmake ..
-
+```
+run as per need 
+```
+./poseEstimation_2d2d || ./poseEstimation_2d3d || ./poseEstimation_3d3d
 ```
