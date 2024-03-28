@@ -19,21 +19,21 @@ set(source_files
     src/poseEstimation_2d2d.cpp
 )
 
-# add_executable(poseEstimation_2d2d ${source_files})
-# target_link_libraries(poseEstimation_2d2d ${OpenCV_LIBS})
-# target_link_libraries(poseEstimation_2d2d Eigen3::Eigen)
+add_executable(poseEstimation_2d2d ${source_files})
+target_link_libraries(poseEstimation_2d2d ${OpenCV_LIBS})
+target_link_libraries(poseEstimation_2d2d Eigen3::Eigen)
 
 set(source_files
     src/poseEstimation_2d3d.cpp
 )
 
-# add_executable(poseEstimation_2d3d ${source_files})
-# target_link_libraries(poseEstimation_2d3d ${OpenCV_LIBS})
-# target_link_libraries(poseEstimation_2d3d Eigen3::Eigen)
-# target_link_libraries(poseEstimation_2d3d Sophus::Sophus)
-# target_link_libraries(poseEstimation_2d3d Ceres::ceres)
-# target_link_libraries(poseEstimation_2d3d ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY} ${G2O_SOLVER_CSPARSE} ${G2O_TYPES_SLAM2D} ${G2O_TYPES_SLAM3D} ${G2O_TYPES_SBA})
-# target_link_libraries(poseEstimation_2d3d g2o_core g2o_stuff g2o_solver_csparse g2o_solver_dense g2o_solver_eigen g2o_types_sba g2o_types_slam2d g2o_types_slam3d g2o_viewer)
+add_executable(poseEstimation_2d3d ${source_files})
+target_link_libraries(poseEstimation_2d3d ${OpenCV_LIBS})
+target_link_libraries(poseEstimation_2d3d Eigen3::Eigen)
+target_link_libraries(poseEstimation_2d3d Sophus::Sophus)
+target_link_libraries(poseEstimation_2d3d Ceres::ceres)
+target_link_libraries(poseEstimation_2d3d ${G2O_CORE_LIBRARY} ${G2O_STUFF_LIBRARY} ${G2O_SOLVER_CSPARSE} ${G2O_TYPES_SLAM2D} ${G2O_TYPES_SLAM3D} ${G2O_TYPES_SBA})
+target_link_libraries(poseEstimation_2d3d g2o_core g2o_stuff g2o_solver_csparse g2o_solver_dense g2o_solver_eigen g2o_types_sba g2o_types_slam2d g2o_types_slam3d g2o_viewer)
 
 set(source_files
     src/poseEstimation_3d3d.cpp
