@@ -52,16 +52,12 @@ fx = 520.9 fy = 521.0 cx = 325.1 cy = 249.7
 
 # Prerequisites for this demo
 [OpenCV](https://github.com/opencv/opencv) : OpenCV is an C++ library for Image Manipulation.
-Dowload and install instructions can be found at: https://github.com/opencv/opencv.
 
 [Eigen](https://github.com/libigl/eigen) : Eigen is a C++ template library for linear algebra.
-Dowload and install instructions can be found at: https://github.com/libigl/eigen
 
 [Sophus](https://github.com/strasdat/Sophus) : Sophus is an open-source C++ framework for Lie groups commonly used for 2D and 3D geometric problems. 
-Dowload and install instructions can be found at: https://github.com/strasdat/Sophus.
 
 [g2o](https://github.com/RainerKuemmerle/g2o) : g2o is an open-source C++ library for optimizing graph-based nonlinear error functions.
-Dowload and install instructions can be found at: https://github.com/RainerKuemmerle/g2o
 
 # Build and Run
 
