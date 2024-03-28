@@ -1,7 +1,7 @@
 # Visual Odometry 
 
 ![License](https://img.shields.io/github/license/adheeshc/visual-odometry-cpp)
-![Build]https://img.shields.io/badge/build-passing-brightgreen
+![Build](https://img.shields.io/badge/build-passing-brightgreen)
 
 # Description
 
