@@ -1,7 +1,8 @@
 # Visual Odometry 
 
 ![License](https://img.shields.io/github/license/adheeshc/visual-odometry-cpp)
-| <img src="https://img.shields.io/badge/OpenCV-27338e?style=for-the-badge&logo=OpenCV&logoColor=white" />| `https://img.shields.io/badge/OpenCV-27338e?style=for-the-badge&logo=OpenCV&logoColor=white`|
+![Build]https://img.shields.io/badge/build-passing-brightgreen
+
 # Description
 
 The purpose of this repository is to estimate the camera’s motion based on ORB feature matching. 
