@@ -41,11 +41,10 @@ The 3D-3D camera pose estimation problem is solved using ICP (Iterative Closest 
 2. using nonlinear optimization (similar to Bundle Adjustment) to improve pose.
 
 # Data description
-**1.png**: Image 1 
-**1_depth.png**: Depth Image 1
-
-**2.png**: Image 2 
-**2_depth.png**: Depth Image 2
+* **1.png**: Image 1
+* **1_depth.png**: Depth Image 1
+* **2.png**: Image 2 
+* **2_depth.png**: Depth Image 2
 
 **TUM Dataset Camera Intrinsics**:
 fx = 520.9 fy = 521.0 cx = 325.1 cy = 249.7
